@@ -1,0 +1,399 @@
+builtin unset VSCODE_INJECTION
+[ -z "$VSCODE_SHELL_INTEGRATION" ]
+[ -n "${VSCODE_ENV_REPLACE:-}" ]
+[ -n "${VSCODE_ENV_PREPEND:-}" ]
+[ -n "${VSCODE_ENV_APPEND:-}" ]
+[ -z "$VSCODE_PYTHON_AUTOACTIVATE_GUARD" ]
+export VSCODE_PYTHON_AUTOACTIVATE_GUARD=1
+[ -n "$VSCODE_PYTHON_BASH_ACTIVATE" ]
+__vsc_regex_environment="^CYGWIN*|MINGW*|MSYS*"
+[[ "$(uname -s)" =~ $__vsc_regex_environment ]]
+__vsc_is_windows=0
+__vsc_regex_histcontrol=".*(erasedups|ignoreboth|ignoredups).*"
+[[ "$HISTCONTROL" =~ $__vsc_regex_histcontrol ]]
+__vsc_history_verify=1
+builtin unset __vsc_regex_environment
+builtin unset __vsc_regex_histcontrol
+__vsc_initialized=0
+__vsc_original_PS1="$PS1"
+__vsc_original_PS2="$PS2"
+__vsc_custom_PS1=""
+__vsc_custom_PS2=""
+__vsc_in_command_execution="1"
+__vsc_current_command=""
+__vsc_nonce="$VSCODE_NONCE"
+unset VSCODE_NONCE
+__vsc_stable="$VSCODE_STABLE"
+unset VSCODE_STABLE
+[ "$__vsc_stable" = "0" ]
+[ -n "$STARSHIP_SESSION_KEY" ]
+[ -n "$POSH_SESSION_ID" ]
+builtin printf '\e]633;P;HasRichCommandDetection=True\a'
+[[ -n "${bash_preexec_imported:-}" ]]
+__vsc_dbg_trap="$(__vsc_get_trap DEBUG)"
+[[ -z "$__vsc_dbg_trap" ]]
+[[ "$__vsc_dbg_trap" != '__vsc_preexec "$_"' && "$__vsc_dbg_trap" != '__vsc_preexec_all "$_"' ]]
+trap '__vsc_preexec_all "$_"' DEBUG
+__vsc_original_prompt_command=${PROMPT_COMMAND:-}
+psql --username=freecodecamp --dbname=postgres
+builtin unset VSCODE_INJECTION
+[ -z "$VSCODE_SHELL_INTEGRATION" ]
+[ -n "${VSCODE_ENV_REPLACE:-}" ]
+[ -n "${VSCODE_ENV_PREPEND:-}" ]
+[ -n "${VSCODE_ENV_APPEND:-}" ]
+[ -z "$VSCODE_PYTHON_AUTOACTIVATE_GUARD" ]
+export VSCODE_PYTHON_AUTOACTIVATE_GUARD=1
+[ -n "$VSCODE_PYTHON_BASH_ACTIVATE" ]
+__vsc_regex_environment="^CYGWIN*|MINGW*|MSYS*"
+[[ "$(uname -s)" =~ $__vsc_regex_environment ]]
+__vsc_is_windows=0
+__vsc_regex_histcontrol=".*(erasedups|ignoreboth|ignoredups).*"
+[[ "$HISTCONTROL" =~ $__vsc_regex_histcontrol ]]
+__vsc_history_verify=1
+builtin unset __vsc_regex_environment
+builtin unset __vsc_regex_histcontrol
+__vsc_initialized=0
+__vsc_original_PS1="$PS1"
+__vsc_original_PS2="$PS2"
+__vsc_custom_PS1=""
+__vsc_custom_PS2=""
+__vsc_in_command_execution="1"
+__vsc_current_command=""
+__vsc_nonce="$VSCODE_NONCE"
+unset VSCODE_NONCE
+__vsc_stable="$VSCODE_STABLE"
+unset VSCODE_STABLE
+[ "$__vsc_stable" = "0" ]
+[ -n "$STARSHIP_SESSION_KEY" ]
+[ -n "$POSH_SESSION_ID" ]
+builtin printf '\e]633;P;HasRichCommandDetection=True\a'
+[[ -n "${bash_preexec_imported:-}" ]]
+__vsc_dbg_trap="$(__vsc_get_trap DEBUG)"
+[[ -z "$__vsc_dbg_trap" ]]
+[[ "$__vsc_dbg_trap" != '__vsc_preexec "$_"' && "$__vsc_dbg_trap" != '__vsc_preexec_all "$_"' ]]
+trap '__vsc_preexec_all "$_"' DEBUG
+__vsc_original_prompt_command=${PROMPT_COMMAND:-}
+cat > insert_data.sh <<'EOF' #!/bin/bash # Do not change this line; FCC tests expect PSQL to exist and be used. PSQL="psql --username=freecodecamp --dbname=worldcup -t --no-align -c" # Optional: clear tables for repeatable runs during development $PSQL "TRUNCATE TABLE games, teams RESTART IDENTITY;" # Read CSV, skip header tail -n +2 games.csv | while IFS=',' read YEAR ROUND WINNER OPPONENT WINNER_GOALS OPPONENT_GOALS do # Insert winner if not present WINNER_ID=$($PSQL "SELECT team_id FROM teams WHERE name='$WINNER';") if [[ -z $WINNER_ID ]]; then $PSQL "INSERT INTO teams(name) VALUES('$WINNER');" > /dev/null WINNER_ID=$($PSQL "SELECT team_id FROM teams WHERE name='$WINNER';") fi # Insert opponent if not present OPPONENT_ID=$($PSQL "SELECT team_id FROM teams WHERE name='$OPPONENT';") if [[ -z $OPPONENT_ID ]]; then $PSQL "INSERT INTO teams(name) VALUES('$OPPONENT');" > /dev/null OPPONENT_ID=$($PSQL "SELECT team_id FROM teams WHERE name='$OPPONENT';") fi # Insert game row $PSQL "INSERT INTO games(year, round, winner_id, opponent_id, winner_goals, opponent_goals) VALUES($YEAR, '$ROUND', $WINNER_ID, $OPPONENT_ID, $WINNER_GOALS, $OPPONENT_GOALS);" > /dev/null done echo "Data load complete." EOF
+chmod +x insert_data.sh
+./insert_data.sh
+DROP DATABASE IF EXISTS worldcup
+CREATE DATABASE worldcup
+\c worldcup
+__vsc_prompt_cmd_original
+__vsc_prompt_cmd_original
+team_id SERIAL PRIMARY KEY,
+__vsc_prompt_cmd_original
+__vsc_prompt_cmd_original
+__vsc_prompt_cmd_original
+__vsc_prompt_cmd_original
+game_id SERIAL PRIMARY KEY,
+year INT NOT NULL,
+__vsc_prompt_cmd_original
+__vsc_prompt_cmd_original
+__vsc_prompt_cmd_original
+winner_goals INT NOT NULL,
+opponent_goals INT NOT NULL
+__vsc_prompt_cmd_original
+psql --username=freecodecamp --dbname=postgres
+./insert_data.sh
+psql --username=freecodecamp --dbname=worldcup
+queries.sh
+pwd
+ls --color=auto -l
+cat > queries.sh <<'EOF' #!/bin/bash PSQL="psql --username=freecodecamp --dbname=worldcup -t --no-align -c" echo "$($PSQL "SELECT SUM(winner_goals) FROM games;")" echo "$($PSQL "SELECT AVG(winner_goals) FROM games;")" echo "$($PSQL "SELECT ROUND(AVG(winner_goals), 2) FROM games;")" echo "$($PSQL "SELECT AVG(winner_goals + opponent_goals) FROM games;")" echo "$($PSQL "SELECT MAX(winner_goals) FROM games;")" echo "$($PSQL "SELECT COUNT(*) FROM games WHERE winner_goals > 2;")" echo "$($PSQL "SELECT name FROM teams t JOIN games g ON t.team_id = g.winner_id WHERE g.year = 2018 AND g.round = 'Final';")" echo "$($PSQL "SELECT name FROM teams t JOIN games g ON t.team_id IN (g.winner_id, g.opponent_id) WHERE g.year = 2014 AND g.round = 'Eighth-Final' GROUP BY name ORDER BY name;")" echo "$($PSQL "SELECT name FROM teams t JOIN games g ON t.team_id = g.winner_id GROUP BY name ORDER BY name;")" echo "$($PSQL "SELECT g.year, t.name FROM games g JOIN teams t ON t.team_id = g.winner_id WHERE g.round='Final' ORDER BY g.year;")" echo "$($PSQL "SELECT COUNT(*) FROM teams WHERE name LIKE 'Co%';")" EOF
+chmod +x queries.sh
+./queries.sh
+__vsc_prompt_cmd_original
+bash queries.sh
+cat > queries.sh <<'EOF' #!/bin/bash PSQL="psql --username=freecodecamp --dbname=worldcup -t --no-align -c" echo "$($PSQL "SELECT SUM(winner_goals) FROM games;")" echo "$($PSQL "SELECT AVG(winner_goals) FROM games;")" echo "$($PSQL "SELECT ROUND(AVG(winner_goals), 2) FROM games;")" echo "$($PSQL "SELECT AVG(winner_goals + opponent_goals) FROM games;")" echo "$($PSQL "SELECT MAX(winner_goals) FROM games;")" echo "$($PSQL "SELECT COUNT(*) FROM games WHERE winner_goals > 2;")" echo "$($PSQL "SELECT name FROM teams t JOIN games g ON t.team_id = g.winner_id WHERE g.year = 2018 AND g.round = 'Final';")" echo "$($PSQL "SELECT name FROM teams t JOIN games g ON t.team_id IN (g.winner_id, g.opponent_id) WHERE g.year = 2014 AND g.round = 'Eighth_ cat > queries.sh << 'EOF' #!/bin/bash PSQL="psql --username=freecodecamp --dbname=worldcup -t --no-align -c" echo "$($PSQL "SELECT SUM(winner_goals) FROM games;")" echo "$($PSQL "SELECT AVG(winner_goals) FROM games;")" echo "$($PSQL "SELECT ROUND(AVG(winner_goals), 2) FROM games;")" echo "$($PSQL "SELECT AVG(winner_goals + opponent_goals) FROM games;")" echo "$($PSQL "SELECT MAX(winner_goals) FROM games;")" echo "$($PSQL "SELECT COUNT(*) FROM games WHERE winner_goals > 2;")" echo "$($PSQL "SELECT name FROM teams t JOIN games g ON t.team_id = g.winner_id WHERE g.year = 2018 AND g.round = 'Final';")" echo "$($PSQL "SELECT name FROM teams t JOIN games g ON t.team_id IN (g.winner_id, g.opponent_id) WHERE g.year = 2014 AND g.round = 'Eighth-Final' GROUP BY name ORDER BY name;")" echo "$($PSQL "SELECT name FROM teams t JOIN games g ON t.team_id = g.winner_id GROUP BY name ORDER BY name;")" echo "$($PSQL "SELECT g.year, t.name FROM games g JOIN teams t ON t.team_id = g.winner_id WHERE g.round='Final' ORDER BY g.year;")" echo "$($PSQL "SELECT COUNT(*) FROM teams WHERE name LIKE 'Co%';")" EOF
+__vsc_prompt_cmd_original
+chmod +x queries.sh
+./queries.sh
+./queries.sh > my_output.txt
+diff -u expected_output.txt my_output.txt
+chmod +x insert_data.sh queries.sh
+pg_dump -cC --inserts -U freecodecamp worldcup > worldcup.sql
+ls --color=auto -lh worldcup.sql
+cat > queries.sh <<'EOF' #!/bin/bash PSQL="psql --username=freecodecamp --dbname=worldcup -t --no-align -c" echo "$($PSQL "SELECT SUM(winner_goals) FROM games;")" echo "$($PSQL "SELECT AVG(winner_goals) FROM games;")" echo "$($PSQL "SELECT ROUND(AVG(winner_goals), 2) FROM games;")" echo "$($PSQL "SELECT AVG(winner_goals + opponent_goals) FROM games;")" echo "$($PSQL "SELECT MAX(winner_goals) FROM games;")" echo "$($PSQL "SELECT COUNT(*) FROM games WHERE winner_goals > 2;")" echo "$($PSQL "SELECT name FROM teams t JOIN games g ON t.team_id = g.winner_id WHERE g.year = 2018 AND g.round = 'Final';")" echo "$($PSQL "SELECT name FROM teams t JOIN games g ON t.team_id IN (g.winner_id, g.opponent_id) WHERE g.year = 2014 AND g.round = 'Eighth-Final' GROUP BY name ORDER BY name;")" echo "$($PSQL "SELECT name FROM teams t JOIN games g ON t.team_id = g.winner_id GROUP BY name ORDER BY name;")" echo "$($PSQL "SELECT g.year, t.name FROM games g JOIN teams t ON t.team_id = g.winner_id WHERE g.round='Final' ORDER BY g.year;")" echo "$($PSQL "SELECT COUNT(*) FROM teams WHERE name LIKE 'Co%';")" EOF
+__vsc_prompt_cmd_original
+chmod +x queries.sh
+chmod +x insert_data.sh queries.sh
+dos2unix insert_data.sh queries.shpg_dump -cC --inserts -U freecodecamp worldcup > worldcup.sql
+ls --color=auto -lh worldcup.sql
+pg_dump -cC --inserts -U freecodecamp worldcup > worldcup.sql
+ls --color=auto -lh worldcup.sql
+./queries.sh
+./queries.sh > my_output.txt
+diff -u expected_output.txt my_output.txt
+psql --username=freecodecamp --dbname=worldcup -c "SELECT COUNT(*) AS teams FROM teams;"
+psql --username=freecodecamp --dbname=worldcup -c "SELECT COUNT(*) AS games FROM games;"
+git init
+git add insert_data.sh queries.sh worldcup.sql games.csv
+git commit -m "Complete World Cup DB project"
+git branch -M main
+__vsc_prompt_cmd_original
+git push -u origin main
+__vsc_prompt_cmd_original
+psql --username=freecodecamp --dbname=worldcup -c "SELECT COUNT(*) AS teams FROM teams;"
+insert_data.sh
+teams
+builtin unset VSCODE_INJECTION
+[ -z "$VSCODE_SHELL_INTEGRATION" ]
+[ -n "${VSCODE_ENV_REPLACE:-}" ]
+[ -n "${VSCODE_ENV_PREPEND:-}" ]
+[ -n "${VSCODE_ENV_APPEND:-}" ]
+[ -z "$VSCODE_PYTHON_AUTOACTIVATE_GUARD" ]
+export VSCODE_PYTHON_AUTOACTIVATE_GUARD=1
+[ -n "$VSCODE_PYTHON_BASH_ACTIVATE" ]
+__vsc_regex_environment="^CYGWIN*|MINGW*|MSYS*"
+[[ "$(uname -s)" =~ $__vsc_regex_environment ]]
+__vsc_is_windows=0
+__vsc_regex_histcontrol=".*(erasedups|ignoreboth|ignoredups).*"
+[[ "$HISTCONTROL" =~ $__vsc_regex_histcontrol ]]
+__vsc_history_verify=1
+builtin unset __vsc_regex_environment
+builtin unset __vsc_regex_histcontrol
+__vsc_initialized=0
+__vsc_original_PS1="$PS1"
+__vsc_original_PS2="$PS2"
+__vsc_custom_PS1=""
+__vsc_custom_PS2=""
+__vsc_in_command_execution="1"
+__vsc_current_command=""
+__vsc_nonce="$VSCODE_NONCE"
+unset VSCODE_NONCE
+__vsc_stable="$VSCODE_STABLE"
+unset VSCODE_STABLE
+[ "$__vsc_stable" = "0" ]
+[ -n "$STARSHIP_SESSION_KEY" ]
+[ -n "$POSH_SESSION_ID" ]
+builtin printf '\e]633;P;HasRichCommandDetection=True\a'
+[[ -n "${bash_preexec_imported:-}" ]]
+__vsc_dbg_trap="$(__vsc_get_trap DEBUG)"
+[[ -z "$__vsc_dbg_trap" ]]
+[[ "$__vsc_dbg_trap" != '__vsc_preexec "$_"' && "$__vsc_dbg_trap" != '__vsc_preexec_all "$_"' ]]
+trap '__vsc_preexec_all "$_"' DEBUG
+__vsc_original_prompt_command=${PROMPT_COMMAND:-}
+__vsc_prompt_cmd_original
+__vsc_prompt_cmd_original
+[[ $1 == "test" ]]
+__vsc_prompt_cmd_original
+__vsc_prompt_cmd_original
+$PSQL "TRUNCATE TABLE games, teams RESTART IDENTITY;"
+__vsc_prompt_cmd_original
+__vsc_prompt_cmd_original
+cat games.csv
+__vsc_prompt_cmd_original
+__vsc_prompt_cmd_original
+[[ $1 == "test" ]]
+chmod +x insert_data.sh queries.sh
+$PSQL "TRUNCATE TABLE games, teams RESTART IDENTITY;"
+$PSQL "INSERT INTO teams(name) VALUES('$WINNER') ON CONFLICT (name) DO NOTHING;"
+WINNER_ID=$($PSQL "SELECT team_id FROM teams WHERE name='$WINNER';")
+./insert_data.sh test
+psql --username=postgres --dbname=worldcuptest -c "SELECT COUNT(*) FROM teams;"
+psql --username=postgres --dbname=worldcuptest -c "SELECT COUNT(*) FROM games;"
+./insert_data.sh test
+psql --username=postgres --dbname=worldcuptest -c "SELECT COUNT(*) FROM teams;"
+psql --username=postgres --dbname=worldcuptest -c "SELECT COUNT(*) FROM games;"
+__vsc_prompt_cmd_original
+builtin unset VSCODE_INJECTION
+[ -z "$VSCODE_SHELL_INTEGRATION" ]
+[ -n "${VSCODE_ENV_REPLACE:-}" ]
+[ -n "${VSCODE_ENV_PREPEND:-}" ]
+[ -n "${VSCODE_ENV_APPEND:-}" ]
+[ -z "$VSCODE_PYTHON_AUTOACTIVATE_GUARD" ]
+export VSCODE_PYTHON_AUTOACTIVATE_GUARD=1
+[ -n "$VSCODE_PYTHON_BASH_ACTIVATE" ]
+__vsc_regex_environment="^CYGWIN*|MINGW*|MSYS*"
+[[ "$(uname -s)" =~ $__vsc_regex_environment ]]
+__vsc_is_windows=0
+__vsc_regex_histcontrol=".*(erasedups|ignoreboth|ignoredups).*"
+[[ "$HISTCONTROL" =~ $__vsc_regex_histcontrol ]]
+__vsc_history_verify=1
+builtin unset __vsc_regex_environment
+builtin unset __vsc_regex_histcontrol
+__vsc_initialized=0
+__vsc_original_PS1="$PS1"
+__vsc_original_PS2="$PS2"
+__vsc_custom_PS1=""
+__vsc_custom_PS2=""
+__vsc_in_command_execution="1"
+__vsc_current_command=""
+__vsc_nonce="$VSCODE_NONCE"
+unset VSCODE_NONCE
+__vsc_stable="$VSCODE_STABLE"
+unset VSCODE_STABLE
+[ "$__vsc_stable" = "0" ]
+[ -n "$STARSHIP_SESSION_KEY" ]
+[ -n "$POSH_SESSION_ID" ]
+builtin printf '\e]633;P;HasRichCommandDetection=True\a'
+[[ -n "${bash_preexec_imported:-}" ]]
+__vsc_dbg_trap="$(__vsc_get_trap DEBUG)"
+[[ -z "$__vsc_dbg_trap" ]]
+[[ "$__vsc_dbg_trap" != '__vsc_preexec "$_"' && "$__vsc_dbg_trap" != '__vsc_preexec_all "$_"' ]]
+trap '__vsc_preexec_all "$_"' DEBUG
+__vsc_original_prompt_command=${PROMPT_COMMAND:-}
+__vsc_prompt_cmd_original
+__vsc_prompt_cmd_original
+[[ $1 == "test" ]]
+__vsc_prompt_cmd_original
+$PSQL "TRUNCATE TABLE games, teams RESTART IDENTITY;"
+psql --username=postgres --dbname=postgres <<'SQL' DROP DATABASE IF EXISTS worldcuptest; CREATE DATABASE worldcuptest; \c worldcuptest CREATE TABLE teams (team_id SERIAL PRIMARY KEY, name VARCHAR(255) UNIQUE NOT NULL); CREATE TABLE games ( game_id SERIAL PRIMARY KEY, year INT NOT NULL, round VARCHAR(50) NOT NULL, winner_id INT NOT NULL REFERENCES teams(team_id), opponent_id INT NOT NULL REFERENCES teams(team_id), winner_goals INT NOT NULL, opponent_goals INT NOT NULL ); SQL
+./insert_data.sh test
+psql --username=postgres --dbname=worldcuptest -c "SELECT COUNT(*) AS teams FROM teams;"
+psql --username=postgres --dbname=worldcuptest -c "SELECT COUNT(*) AS games FROM games;"
+./queries.sh > my_output.txt
+diff -u expected_output.txt my_output.txt
+chmod +x insert_data.sh queries.sh
+__vsc_prompt_cmd_original
+pg_dump -cC --inserts -U freecodecamp worldcup > worldcup.sql
+builtin unset VSCODE_INJECTION
+[ -z "$VSCODE_SHELL_INTEGRATION" ]
+[ -n "${VSCODE_ENV_REPLACE:-}" ]
+[ -n "${VSCODE_ENV_PREPEND:-}" ]
+[ -n "${VSCODE_ENV_APPEND:-}" ]
+[ -z "$VSCODE_PYTHON_AUTOACTIVATE_GUARD" ]
+export VSCODE_PYTHON_AUTOACTIVATE_GUARD=1
+[ -n "$VSCODE_PYTHON_BASH_ACTIVATE" ]
+__vsc_regex_environment="^CYGWIN*|MINGW*|MSYS*"
+[[ "$(uname -s)" =~ $__vsc_regex_environment ]]
+__vsc_is_windows=0
+__vsc_regex_histcontrol=".*(erasedups|ignoreboth|ignoredups).*"
+[[ "$HISTCONTROL" =~ $__vsc_regex_histcontrol ]]
+__vsc_history_verify=1
+builtin unset __vsc_regex_environment
+builtin unset __vsc_regex_histcontrol
+__vsc_initialized=0
+__vsc_original_PS1="$PS1"
+__vsc_original_PS2="$PS2"
+__vsc_custom_PS1=""
+__vsc_custom_PS2=""
+__vsc_in_command_execution="1"
+__vsc_current_command=""
+__vsc_nonce="$VSCODE_NONCE"
+unset VSCODE_NONCE
+__vsc_stable="$VSCODE_STABLE"
+unset VSCODE_STABLE
+[ "$__vsc_stable" = "0" ]
+[ -n "$STARSHIP_SESSION_KEY" ]
+[ -n "$POSH_SESSION_ID" ]
+builtin printf '\e]633;P;HasRichCommandDetection=True\a'
+[[ -n "${bash_preexec_imported:-}" ]]
+__vsc_dbg_trap="$(__vsc_get_trap DEBUG)"
+[[ -z "$__vsc_dbg_trap" ]]
+[[ "$__vsc_dbg_trap" != '__vsc_preexec "$_"' && "$__vsc_dbg_trap" != '__vsc_preexec_all "$_"' ]]
+trap '__vsc_preexec_all "$_"' DEBUG
+__vsc_original_prompt_command=${PROMPT_COMMAND:-}
+__vsc_prompt_cmd_original
+builtin unset VSCODE_INJECTION
+[ -z "$VSCODE_SHELL_INTEGRATION" ]
+[ -n "${VSCODE_ENV_REPLACE:-}" ]
+[ -n "${VSCODE_ENV_PREPEND:-}" ]
+[ -n "${VSCODE_ENV_APPEND:-}" ]
+[ -z "$VSCODE_PYTHON_AUTOACTIVATE_GUARD" ]
+export VSCODE_PYTHON_AUTOACTIVATE_GUARD=1
+[ -n "$VSCODE_PYTHON_BASH_ACTIVATE" ]
+__vsc_regex_environment="^CYGWIN*|MINGW*|MSYS*"
+[[ "$(uname -s)" =~ $__vsc_regex_environment ]]
+__vsc_is_windows=0
+__vsc_regex_histcontrol=".*(erasedups|ignoreboth|ignoredups).*"
+[[ "$HISTCONTROL" =~ $__vsc_regex_histcontrol ]]
+__vsc_history_verify=1
+builtin unset __vsc_regex_environment
+builtin unset __vsc_regex_histcontrol
+__vsc_initialized=0
+__vsc_original_PS1="$PS1"
+__vsc_original_PS2="$PS2"
+__vsc_custom_PS1=""
+__vsc_custom_PS2=""
+__vsc_in_command_execution="1"
+__vsc_current_command=""
+__vsc_nonce="$VSCODE_NONCE"
+unset VSCODE_NONCE
+__vsc_stable="$VSCODE_STABLE"
+unset VSCODE_STABLE
+[ "$__vsc_stable" = "0" ]
+[ -n "$STARSHIP_SESSION_KEY" ]
+[ -n "$POSH_SESSION_ID" ]
+builtin printf '\e]633;P;HasRichCommandDetection=True\a'
+[[ -n "${bash_preexec_imported:-}" ]]
+__vsc_dbg_trap="$(__vsc_get_trap DEBUG)"
+[[ -z "$__vsc_dbg_trap" ]]
+[[ "$__vsc_dbg_trap" != '__vsc_preexec "$_"' && "$__vsc_dbg_trap" != '__vsc_preexec_all "$_"' ]]
+trap '__vsc_preexec_all "$_"' DEBUG
+__vsc_original_prompt_command=${PROMPT_COMMAND:-}
+__vsc_prompt_cmd_original
+__vsc_prompt_cmd_original
+[[ $1 == "test" ]]
+__vsc_prompt_cmd_original
+__vsc_prompt_cmd_original
+$PSQL "TRUNCATE TABLE games, teams RESTART IDENTITY;"
+__vsc_prompt_cmd_original
+__vsc_prompt_cmd_original
+cat games.csv
+builtin unset VSCODE_INJECTION
+[ -z "$VSCODE_SHELL_INTEGRATION" ]
+[ -n "${VSCODE_ENV_REPLACE:-}" ]
+[ -n "${VSCODE_ENV_PREPEND:-}" ]
+[ -n "${VSCODE_ENV_APPEND:-}" ]
+[ -z "$VSCODE_PYTHON_AUTOACTIVATE_GUARD" ]
+export VSCODE_PYTHON_AUTOACTIVATE_GUARD=1
+[ -n "$VSCODE_PYTHON_BASH_ACTIVATE" ]
+__vsc_regex_environment="^CYGWIN*|MINGW*|MSYS*"
+[[ "$(uname -s)" =~ $__vsc_regex_environment ]]
+__vsc_is_windows=0
+__vsc_regex_histcontrol=".*(erasedups|ignoreboth|ignoredups).*"
+[[ "$HISTCONTROL" =~ $__vsc_regex_histcontrol ]]
+__vsc_history_verify=1
+builtin unset __vsc_regex_environment
+builtin unset __vsc_regex_histcontrol
+__vsc_initialized=0
+__vsc_original_PS1="$PS1"
+__vsc_original_PS2="$PS2"
+__vsc_custom_PS1=""
+__vsc_custom_PS2=""
+__vsc_in_command_execution="1"
+__vsc_current_command=""
+__vsc_nonce="$VSCODE_NONCE"
+unset VSCODE_NONCE
+__vsc_stable="$VSCODE_STABLE"
+unset VSCODE_STABLE
+[ "$__vsc_stable" = "0" ]
+[ -n "$STARSHIP_SESSION_KEY" ]
+[ -n "$POSH_SESSION_ID" ]
+builtin printf '\e]633;P;HasRichCommandDetection=True\a'
+[[ -n "${bash_preexec_imported:-}" ]]
+__vsc_dbg_trap="$(__vsc_get_trap DEBUG)"
+[[ -z "$__vsc_dbg_trap" ]]
+[[ "$__vsc_dbg_trap" != '__vsc_preexec "$_"' && "$__vsc_dbg_trap" != '__vsc_preexec_all "$_"' ]]
+trap '__vsc_preexec_all "$_"' DEBUG
+__vsc_original_prompt_command=${PROMPT_COMMAND:-}
+cat > insert_data.sh <<'EOF' #!/bin/bash # Do not change this line; FCC tests expect PSQL to exist and be used. if [[ $1 == "test" ]] then PSQL="psql --username=postgres --dbname=worldcuptest -t --no-align -c" else PSQL="psql --username=freecodecamp --dbname=worldcup -t --no-align -c" fi # Reset tables each run $PSQL "TRUNCATE TABLE games, teams RESTART IDENTITY;" > /dev/null # Load CSV (skip header) cat games.csv | while IFS=',' read YEAR ROUND WINNER OPPONENT WINNER_GOALS OPPONENT_GOALS do if [[ $YEAR != "year" ]] then # Insert teams (idempotent) $PSQL "INSERT INTO teams(name) VALUES('$WINNER') ON CONFLICT (name) DO NOTHING;" > /dev/null $PSQL "INSERT INTO teams(name) VALUES('$OPPONENT') ON CONFLICT (name) DO NOTHING;" > /dev/null # Get IDs WINNER_ID=$($PSQL "SELECT team_id FROM teams WHERE name='$WINNER';") OPPONENT_ID=$($PSQL "SELECT team_id FROM teams WHERE name='$OPPONENT';") # Insert game row $PSQL "INSERT INTO games(year, round, winner_id, opponent_id, winner_goals, opponent_goals) VALUES($YEAR, '$ROUND', $WINNER_ID, $OPPONENT_ID, $WINNER_GOALS, $OPPONENT_GOALS);" > /dev/null fi done EOF
+chmod +x insert_data.sh
+psql --username=postgres --dbname=postgres <<'SQL' DROP DATABASE IF EXISTS worldcuptest; CREATE DATABASE worldcuptest; \c worldcuptest CREATE TABLE IF NOT EXISTS teams ( team_id SERIAL PRIMARY KEY, name VARCHAR(255) UNIQUE NOT NULL ); CREATE TABLE IF NOT EXISTS games ( game_id SERIAL PRIMARY KEY, year INT NOT NULL, round VARCHAR(50) NOT NULL, winner_id INT NOT NULL REFERENCES teams(team_id), opponent_id INT NOT NULL REFERENCES teams(team_id), winner_goals INT NOT NULL, opponent_goals INT NOT NULL ); SQL
+./insert_data.sh test
+psql --username=postgres --dbname=worldcuptest -c "SELECT COUNT(*) AS teams FROM teams;"
+psql --username=postgres --dbname=worldcuptest -c "SELECT COUNT(*) AS games FROM games;"
+./queries.sh > my_output.txt
+diff -u expected_output.txt my_output.txt
+cat > queries.sh <<'EOF' #!/bin/bash PSQL="psql --username=freecodecamp --dbname=worldcup -t --no-align -c" echo "Total number of goals in all games from winning teams:" echo "$($PSQL "SELECT SUM(winner_goals) FROM games;")" echo echo "Total number of goals in all games from both teams combined:" echo "$($PSQL "SELECT SUM(winner_goals + opponent_goals) FROM games;")" echo echo "Average number of goals in all games from the winning teams:" echo "$($PSQL "SELECT AVG(winner_goals) FROM games;")" echo echo "Average number of goals in all games from the winning teams rounded to two decimal places:" echo "$($PSQL "SELECT ROUND(AVG(winner_goals), 2) FROM games;")" echo echo "Average number of goals in all games from both teams:" echo "$($PSQL "SELECT AVG(winner_goals + opponent_goals) FROM games;")" echo echo "Most goals scored in a single game by one team:" echo "$($PSQL "SELECT MAX(winner_goals) FROM games;")" echo echo "Number of games where the winning team scored more than two goals:" echo "$($PSQL "SELECT COUNT(*) FROM games WHERE winner_goals > 2;")" echo echo "Winner of the 2018 tournament team name:" echo "$($PSQL "SELECT name FROM teams t JOIN games g ON t.team_id = g.winner_id WHERE g.year = 2018 AND g.round = 'Final';")" echo echo "List of teams who played in the 2014 'Eighth-Final' round:" echo "$($PSQL "SELECT DISTINCT name FROM teams t JOIN games g ON t.team_id IN (g.winner_id, g.opponent_id) WHERE g.year = 2014 AND g.round = 'Eighth-Final' ORDER BY name;")" echo echo "List of unique winning team names in the whole data set:" echo "$($PSQL "SELECT DISTINCT name FROM teams t JOIN games g ON t.team_id = g.winner_id ORDER BY name;")" echo echo "Year and team name of all the champions:" echo "$($PSQL "SELECT year || '|' || name FROM games g JOIN teams t ON t.team_id = g.winner_id WHERE g.round = 'Final' ORDER BY g.year;")" echo echo "List of teams that start with 'Co':" echo "$($PSQL "SELECT name FROM teams WHERE name LIKE 'Co%' ORDER BY name;")" EOF
+__vsc_prompt_cmd_original
+chmod +x queries.sh
+./queries.sh > my_output.txt
+diff -u expected_output.txt my_output.txt
+__vsc_prompt_cmd_original
+PSQL="psql --username=freecodecamp --dbname=worldcup -t --no-align -c"
+__vsc_prompt_cmd_original
+echo
+__vsc_prompt_cmd_original
+echo "Total number of goals in all games from winning teams:"
+echo "$($PSQL "SELECT SUM(winner_goals) FROM games;")"
+__vsc_prompt_cmd_original
+echo
+echo "Total number of goals in all games from both teams combined:"
+echo "$($PSQL "SELECT SUM(winner_goals + opponent_goals) FROM games;")"
+__vsc_prompt_cmd_original
+__vsc_prompt_cmd_original
+./queries.sh > my_output.txt
+diff -u expected_output.txt my_output.txt
