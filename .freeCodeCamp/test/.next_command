@@ -1,0 +1,125 @@
+__vsc_prompt_cmd_original
+psql -U freecodecamp -d worldcup -c "SELECT year, COUNT(*) FROM games GROUP BY year ORDER BY year;"
+./queries.sh
+chmod +x queries.sh
+./queries.sh
+cat > queries.sh <<'BASH' #!/usr/bin/env bash PSQL="psql -X --username=freecodecamp --dbname=worldcup --no-align --tuples-only -F ' ' -c" # 1 echo "$($PSQL "SELECT SUM(winner_goals) FROM games;")" # 2 echo "$($PSQL "SELECT SUM(winner_goals)+SUM(opponent_goals) FROM games;")" # 3 echo "$($PSQL "SELECT AVG(winner_goals) FROM games;")" # 4 echo "$($PSQL "SELECT ROUND(AVG(winner_goals),2) FROM games;")" # 5 echo "$($PSQL "SELECT AVG(winner_goals+opponent_goals) FROM games;")" # 6 echo "$($PSQL "SELECT MAX(winner_goals) FROM games;")" # 7 echo "$($PSQL "SELECT COUNT(*) FROM games WHERE winner_goals > 2;")" # 8 echo "$($PSQL "SELECT name FROM teams INNER JOIN games ON teams.team_id=games.winner_id WHERE year=2018 AND round='Final';")" # 9 echo "$($PSQL "SELECT name FROM teams WHERE team_id IN (SELECT winner_id FROM games WHERE year=2014 AND round='Eighth-Final') OR team_id IN (SELECT opponent_id FROM games WHERE year=2014 AND round='Eighth-Final') ORDER BY name;")" # 10 echo "$($PSQL "SELECT DISTINCT name FROM teams INNER JOIN games ON teams.team_id=games.winner_id ORDER BY name;")" # 11 echo "$($PSQL "SELECT year, name FROM teams INNER JOIN games ON teams.team_id=games.winner_id WHERE round='Final' ORDER BY year;")" # 12 echo "$($PSQL "SELECT name FROM teams WHERE name LIKE 'Co%' ORDER BY name;")" BASH
+__vsc_prompt_cmd_original
+chmod +x queries.sh
+./queries.sh
+DROP DATABASE IF EXISTS worldcup
+CREATE DATABASE worldcup WITH OWNER freecodecamp
+\connect worldcup
+__vsc_prompt_cmd_original
+DROP TABLE IF EXISTS games
+DROP TABLE IF EXISTS teams
+__vsc_prompt_cmd_original
+__vsc_prompt_cmd_original
+team_id SERIAL PRIMARY KEY,
+__vsc_prompt_cmd_original
+__vsc_prompt_cmd_original
+__vsc_prompt_cmd_original
+__vsc_prompt_cmd_original
+game_id SERIAL PRIMARY KEY,
+year INT NOT NULL,
+__vsc_prompt_cmd_original
+__vsc_prompt_cmd_original
+__vsc_prompt_cmd_original
+winner_goals INT NOT NULL,
+opponent_goals INT NOT NULL
+__vsc_prompt_cmd_original
+builtin unset VSCODE_INJECTION
+[ -z "$VSCODE_SHELL_INTEGRATION" ]
+[ -n "${VSCODE_ENV_REPLACE:-}" ]
+[ -n "${VSCODE_ENV_PREPEND:-}" ]
+[ -n "${VSCODE_ENV_APPEND:-}" ]
+[ -z "$VSCODE_PYTHON_AUTOACTIVATE_GUARD" ]
+export VSCODE_PYTHON_AUTOACTIVATE_GUARD=1
+[ -n "$VSCODE_PYTHON_BASH_ACTIVATE" ]
+__vsc_regex_environment="^CYGWIN*|MINGW*|MSYS*"
+[[ "$(uname -s)" =~ $__vsc_regex_environment ]]
+__vsc_is_windows=0
+__vsc_regex_histcontrol=".*(erasedups|ignoreboth|ignoredups).*"
+[[ "$HISTCONTROL" =~ $__vsc_regex_histcontrol ]]
+__vsc_history_verify=1
+builtin unset __vsc_regex_environment
+builtin unset __vsc_regex_histcontrol
+__vsc_initialized=0
+__vsc_original_PS1="$PS1"
+__vsc_original_PS2="$PS2"
+__vsc_custom_PS1=""
+__vsc_custom_PS2=""
+__vsc_in_command_execution="1"
+__vsc_current_command=""
+__vsc_nonce="$VSCODE_NONCE"
+unset VSCODE_NONCE
+__vsc_stable="$VSCODE_STABLE"
+unset VSCODE_STABLE
+[ "$__vsc_stable" = "0" ]
+[ -n "$STARSHIP_SESSION_KEY" ]
+[ -n "$POSH_SESSION_ID" ]
+builtin printf '\e]633;P;HasRichCommandDetection=True\a'
+[[ -n "${bash_preexec_imported:-}" ]]
+__vsc_dbg_trap="$(__vsc_get_trap DEBUG)"
+[[ -z "$__vsc_dbg_trap" ]]
+[[ "$__vsc_dbg_trap" != '__vsc_preexec "$_"' && "$__vsc_dbg_trap" != '__vsc_preexec_all "$_"' ]]
+trap '__vsc_preexec_all "$_"' DEBUG
+__vsc_original_prompt_command=${PROMPT_COMMAND:-}
+DROP DATABASE IF EXISTS worldcup
+CREATE DATABASE worldcup WITH OWNER freecodecamp
+\connect worldcup
+__vsc_prompt_cmd_original
+DROP TABLE IF EXISTS games
+DROP TABLE IF EXISTS teams
+__vsc_prompt_cmd_original
+__vsc_prompt_cmd_original
+team_id SERIAL PRIMARY KEY,
+__vsc_prompt_cmd_original
+__vsc_prompt_cmd_original
+__vsc_prompt_cmd_original
+__vsc_prompt_cmd_original
+game_id SERIAL PRIMARY KEY,
+year INT NOT NULL,
+__vsc_prompt_cmd_original
+__vsc_prompt_cmd_original
+__vsc_prompt_cmd_original
+winner_goals INT NOT NULL,
+opponent_goals INT NOT NULL
+__vsc_prompt_cmd_original
+builtin unset VSCODE_INJECTION
+[ -z "$VSCODE_SHELL_INTEGRATION" ]
+[ -n "${VSCODE_ENV_REPLACE:-}" ]
+[ -n "${VSCODE_ENV_PREPEND:-}" ]
+[ -n "${VSCODE_ENV_APPEND:-}" ]
+[ -z "$VSCODE_PYTHON_AUTOACTIVATE_GUARD" ]
+export VSCODE_PYTHON_AUTOACTIVATE_GUARD=1
+[ -n "$VSCODE_PYTHON_BASH_ACTIVATE" ]
+__vsc_regex_environment="^CYGWIN*|MINGW*|MSYS*"
+[[ "$(uname -s)" =~ $__vsc_regex_environment ]]
+__vsc_is_windows=0
+__vsc_regex_histcontrol=".*(erasedups|ignoreboth|ignoredups).*"
+[[ "$HISTCONTROL" =~ $__vsc_regex_histcontrol ]]
+__vsc_history_verify=1
+builtin unset __vsc_regex_environment
+builtin unset __vsc_regex_histcontrol
+__vsc_initialized=0
+__vsc_original_PS1="$PS1"
+__vsc_original_PS2="$PS2"
+__vsc_custom_PS1=""
+__vsc_custom_PS2=""
+__vsc_in_command_execution="1"
+__vsc_current_command=""
+__vsc_nonce="$VSCODE_NONCE"
+unset VSCODE_NONCE
+__vsc_stable="$VSCODE_STABLE"
+unset VSCODE_STABLE
+[ "$__vsc_stable" = "0" ]
+[ -n "$STARSHIP_SESSION_KEY" ]
+[ -n "$POSH_SESSION_ID" ]
+builtin printf '\e]633;P;HasRichCommandDetection=True\a'
+[[ -n "${bash_preexec_imported:-}" ]]
+__vsc_dbg_trap="$(__vsc_get_trap DEBUG)"
+[[ -z "$__vsc_dbg_trap" ]]
+[[ "$__vsc_dbg_trap" != '__vsc_preexec "$_"' && "$__vsc_dbg_trap" != '__vsc_preexec_all "$_"' ]]
+trap '__vsc_preexec_all "$_"' DEBUG
+__vsc_original_prompt_command=${PROMPT_COMMAND:-}
